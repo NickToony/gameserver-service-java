@@ -84,3 +84,9 @@ Create a client object, and call refresh on it. It's that simple. This will fetc
 Client client = new Client();
 client.refresh();
 ```
+
+Planned Features
+---------------
+- META data handling
+- Filtering by field
+- A smarter "quick-refresh"
