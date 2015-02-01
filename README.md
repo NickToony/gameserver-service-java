@@ -28,7 +28,7 @@ Configuration Example
 The first thing you **must** do before using any of the methods is set a game configuration. This means that you must create a class that extends the GameserverConfig. For example:
 
 ```java
-import com.nicktoony.service.GameserverConfig;
+import com.nicktoony.gameserver.service.GameserverConfig;
 
 /**
  * Created by Nick on 31/01/2015.
