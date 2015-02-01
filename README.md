@@ -89,4 +89,5 @@ Planned Features
 ---------------
 - META data handling
 - Filtering by field
+- Ordering by field
 - A smarter "quick-refresh"
