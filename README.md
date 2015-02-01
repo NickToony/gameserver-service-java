@@ -23,9 +23,9 @@ Installation
     - e.g. for gradle (replace module name)
 `compile project(':module_name')`
 
-Server Example
+Configuration Example
 ------------
-The first thing you must do before using any of the methods is set a game configuration. This means that you must create a class that extends the GameserverConfig. For example:
+The first thing you **must** do before using any of the methods is set a game configuration. This means that you must create a class that extends the GameserverConfig. For example:
 
 ```java
 import com.nicktoony.service.GameserverConfig;
@@ -62,14 +62,25 @@ public class GameConfig extends GameserverConfig {
 }
 ```
 
-Then ensure the first line of code before calling any methods is
+Ensure the first line of code before calling any methods is
 
 ```java
 GameserverConfig.setConfig(new GameConfig());
 ```
 
-Now you can freely use the commands provided. E.g.
+Now you can freely use the commands provided.
+
+Server Example
+---------------
 ```java
 Host host = new Host("My new server 1", 0, 16);
 ```
-will create and update a server with the name "My new server 1", with 0 / 16 players.
+will create and update a server with the name "My new server 1", with 0 / 16 players. You can use the setters on the Host object to change the server name, player count and more.
+
+Client Example
+---------------
+Create a client object, and call refresh on it. It's that simple. This will fetch all game servers from the list, and handle pagination for you.
+```java
+Client client = new Client();
+client.refresh();
+```
