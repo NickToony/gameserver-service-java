@@ -1,4 +1,4 @@
-package com.nicktoony.service.host.APIResponse;
+package com.nicktoony.gameserver.service.host.APIResponse;
 
 /**
  * Created by Nick on 31/01/2015.

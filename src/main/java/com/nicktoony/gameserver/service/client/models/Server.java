@@ -1,4 +1,4 @@
-package com.nicktoony.service.client.models;
+package com.nicktoony.gameserver.service.client.models;
 
 /**
  * Created by Nick on 01/02/2015.

@@ -1,4 +1,4 @@
-package com.nicktoony.service;
+package com.nicktoony.gameserver.service;
 
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;

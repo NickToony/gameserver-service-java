@@ -1,9 +1,9 @@
-package com.nicktoony.service.host;
+package com.nicktoony.gameserver.service.host;
 
 import com.google.gson.JsonSyntaxException;
-import com.nicktoony.service.GameserverConfig;
-import com.nicktoony.service.host.APIResponse.CreateServer;
-import com.nicktoony.service.host.APIResponse.UpdateServer;
+import com.nicktoony.gameserver.service.GameserverConfig;
+import com.nicktoony.gameserver.service.host.APIResponse.CreateServer;
+import com.nicktoony.gameserver.service.host.APIResponse.UpdateServer;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.FormEncodingBuilder;
 import com.squareup.okhttp.Request;

@@ -1,9 +1,9 @@
-package com.nicktoony.service.client;
+package com.nicktoony.gameserver.service.client;
 
 import com.google.gson.JsonSyntaxException;
-import com.nicktoony.service.GameserverConfig;
-import com.nicktoony.service.client.models.Server;
-import com.nicktoony.service.client.responses.ServersList;
+import com.nicktoony.gameserver.service.GameserverConfig;
+import com.nicktoony.gameserver.service.client.models.Server;
+import com.nicktoony.gameserver.service.client.responses.ServersList;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;

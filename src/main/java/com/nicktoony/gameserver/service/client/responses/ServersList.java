@@ -1,6 +1,6 @@
-package com.nicktoony.service.client.responses;
+package com.nicktoony.gameserver.service.client.responses;
 
-import com.nicktoony.service.client.models.Server;
+import com.nicktoony.gameserver.service.client.models.Server;
 
 /**
  * Created by Nick on 01/02/2015.
