@@ -65,7 +65,7 @@ public class Host implements Callback {
 
         Request request = new Request.Builder()
                 .url(GameserverConfig.getConfig().getServerUrl()
-                        + GameserverConfig.URL_CREATE_SERVER
+                        + GameserverConfig.URL_UPDATE_SERVER
                         + GameserverConfig.getConfig().getGameAPIKey()
                         + "/" + id)
                 .post(new FormEncodingBuilder()

@@ -1,6 +1,8 @@
 package com.nicktoony.service;
 
+import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.squareup.okhttp.OkHttpClient;
 
 /**
@@ -8,6 +10,8 @@ import com.squareup.okhttp.OkHttpClient;
  */
 public abstract class GameserverConfig {
     public static final String URL_CREATE_SERVER = "game/";
+    public static final String URL_UPDATE_SERVER = "game/";
+    public static final String URL_GET_SERVERS = "game/";
 
     private static GameserverConfig configuration;
 
@@ -80,7 +84,9 @@ public abstract class GameserverConfig {
      */
     public Gson getGson() {
         if (gson == null) {
-            gson = new Gson();
+            gson = new GsonBuilder()
+                    .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+                    .create();
         }
         return gson;
     }
