@@ -19,6 +19,15 @@ import java.util.List;
 public class Client implements Callback {
     private List<Server> servers = new ArrayList<>();
     private boolean active = true;
+    private ClientListener listener;
+
+    /**
+     * Simple listener object which can receive events
+     */
+    public interface ClientListener {
+        public void onRefreshed();
+        public void onFail();
+    }
 
     /**
      * Wipe the current server list, and fetch a fresh one
@@ -51,7 +60,7 @@ public class Client implements Callback {
 
     @Override
     public void onFailure(Request request, IOException e) {
-        active = false;
+        onFail();
 
         GameserverConfig.getConfig().debugLog(
                 "FetchServers :: no response"
@@ -73,14 +82,49 @@ public class Client implements Callback {
             if (serversList.getCurrentPage() < serversList.getLastPage()) {
                 fetch(serversList.getCurrentPage() + 1);
             } else {
+                onRefresh();
+
                 GameserverConfig.getConfig().debugLog(
                         "FetchServers :: Completed"
                 );
             }
         } catch (JsonSyntaxException exception) {
+            onFail();
+
             GameserverConfig.getConfig().debugLog(
                     "FetchServers :: Invalid JSON format"
             );
         }
+    }
+
+    private void onRefresh() {
+        if (listener != null) {
+            listener.onRefreshed();
+        }
+    }
+
+    private void onFail() {
+        active = false;
+        if (listener != null) {
+            listener.onFail();
+        }
+    }
+
+    /**
+     * Set a listener to receive key events
+     * @param listener
+     * @return
+     */
+    public Client setListener(ClientListener listener) {
+        this.listener = listener;
+        return this;
+    }
+
+    /**
+     * Returns the current servers fetched.. this might not be completed,
+     * @return
+     */
+    public List<Server> getServers() {
+        return servers;
     }
 }
