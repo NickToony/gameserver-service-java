@@ -9,6 +9,7 @@ import com.squareup.okhttp.FormEncodingBuilder;
 import com.squareup.okhttp.Request;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -30,6 +31,8 @@ public class Host implements Callback {
     private Timer timer;
     private TimerTask timerTask;
 
+    private Map<String, String> meta;
+
     /**
      * Create a new host on the server list
      * @param name
@@ -41,6 +44,8 @@ public class Host implements Callback {
         this.currentPlayers = currentPlayers;
         this.maxPlayers = maxPlayers;
 
+        meta = new HashMap<>();
+
         timer = new Timer();
         timerTask = new TimerTask() {
             @Override
@@ -50,7 +55,7 @@ public class Host implements Callback {
         };
 
         // send to gameserver list
-        create();
+        //create();
     }
 
     /**
@@ -63,17 +68,20 @@ public class Host implements Callback {
             return;
         }
 
+        // Create the form, attaching meta
+        FormEncodingBuilder formBuilder = new FormEncodingBuilder()
+                .add("name", name)
+                .add("current_players", Integer.toString(currentPlayers))
+                .add("max_players", Integer.toString(maxPlayers))
+                .add("password", password);
+        attachMeta(formBuilder);
+        // Create request
         Request request = new Request.Builder()
                 .url(GameserverConfig.getConfig().getServerUrl()
                         + GameserverConfig.URL_UPDATE_SERVER
                         + GameserverConfig.getConfig().getGameAPIKey()
                         + "/" + id)
-                .post(new FormEncodingBuilder()
-                        .add("name", name)
-                        .add("current_players", Integer.toString(currentPlayers))
-                        .add("max_players", Integer.toString(maxPlayers))
-                        .add("password", password)
-                        .build())
+                .post(formBuilder.build())
                 .build();
         GameserverConfig.getConfig().getClient().newCall(request).enqueue(this);
 
@@ -85,16 +93,21 @@ public class Host implements Callback {
      * Method which performs the CREATE_SERVER request to the API. It handles the response
      * and starts the timer task
      */
-    private void create() {
+    public void create() {
+
+        // Create the form, attaching meta
+        FormEncodingBuilder formBuilder = new FormEncodingBuilder()
+                .add("name", name)
+                .add("current_players", Integer.toString(currentPlayers))
+                .add("max_players", Integer.toString(maxPlayers));
+        attachMeta(formBuilder);
+
+        // Create the request
         Request request = new Request.Builder()
                 .url(GameserverConfig.getConfig().getServerUrl()
                         + GameserverConfig.URL_CREATE_SERVER
                         + GameserverConfig.getConfig().getGameAPIKey())
-                .post(new FormEncodingBuilder()
-                        .add("name", name)
-                        .add("current_players", Integer.toString(currentPlayers))
-                        .add("max_players", Integer.toString(maxPlayers))
-                        .build())
+                .post(formBuilder.build())
                 .build();
 
         Callback callback = new Callback() {
@@ -249,6 +262,16 @@ public class Host implements Callback {
             GameserverConfig.getConfig().debugLog(
                     "UpdateServer :: HTTP header failure: " + response.code()
             );
+        }
+    }
+
+    public void addMeta(String key, String value) {
+        meta.put(key, value);
+    }
+
+    public void attachMeta(FormEncodingBuilder builder) {
+        for (Map.Entry<String, String> data : meta.entrySet()) {
+            builder.add(data.getKey(), data.getValue());
         }
     }
 }
