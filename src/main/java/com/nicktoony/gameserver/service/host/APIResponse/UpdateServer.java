@@ -9,7 +9,7 @@ import java.util.Map;
  */
 public class UpdateServer {
     private boolean success;
-    private Map<String, String> errors;
+    private Map<String, String[]> errors;
 
     /**
      * Whether or not the create/update was successful
@@ -23,7 +23,7 @@ public class UpdateServer {
      * A map of all errors
      * @return
      */
-    public Map<String, String> getErrors() {
+    public Map<String, String[]> getErrors() {
         return errors;
     }
 }

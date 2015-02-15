@@ -130,9 +130,9 @@ public class Host implements Callback {
                             );
 
                             // DEBUG: Output all errors
-                            for (Map.Entry<String, String> error : server.getErrors().entrySet()) {
+                            for (Map.Entry<String, String[]> error : server.getErrors().entrySet()) {
                                 GameserverConfig.getConfig().debugLog(
-                                        "    " + error.getKey() + " - " + error.getValue()
+                                        "    " + error.getKey() + " - " + error.getValue()[0]
                                 );
                             }
                         }
@@ -231,9 +231,9 @@ public class Host implements Callback {
                     );
 
                     // DEBUG: Output all errors
-                    for (Map.Entry<String, String> error : server.getErrors().entrySet()) {
+                    for (Map.Entry<String, String[]> error : server.getErrors().entrySet()) {
                         GameserverConfig.getConfig().debugLog(
-                                "    " + error.getKey() + " - " + error.getValue()
+                                "    " + error.getKey() + " - " + error.getValue()[0]
                         );
                     }
                 }
