@@ -269,7 +269,7 @@ public class Host implements Callback {
         meta.put(key, value);
     }
 
-    public void attachMeta(FormEncodingBuilder builder) {
+    private void attachMeta(FormEncodingBuilder builder) {
         for (Map.Entry<String, String> data : meta.entrySet()) {
             builder.add(data.getKey(), data.getValue());
         }
