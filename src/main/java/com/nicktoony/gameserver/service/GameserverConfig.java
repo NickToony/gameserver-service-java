@@ -80,9 +80,27 @@ public abstract class GameserverConfig {
         return client;
     }
 
+    /**
+     * Given the body of a response, create a ServerList model
+     * @param reader
+     * @return the completed model
+     * @throws IOException
+     */
     public abstract ServersList parseJsonForServerList(Reader reader) throws IOException;
 
+    /**
+     * Given the body of a response, create a CreateServer model
+     * @param reader
+     * @return the completed model
+     * @throws IOException
+     */
     public abstract CreateServer parseJsonForCreateServer(Reader reader) throws IOException;
 
+    /**
+     * Given the body of a response, create a UpdateServer model
+     * @param reader
+     * @return the completed model
+     * @throws IOException
+     */
     public abstract UpdateServer parseJsonForUpdateServer(Reader reader) throws IOException;
 }
