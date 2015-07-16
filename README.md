@@ -14,7 +14,7 @@ You need a web server running the above project for this to be useful.
 
 **Other Dependencies (which are automatically included by Gradle)**
 - OkHTTP (http://square.github.io/okhttp/)
-- Gson (https://code.google.com/p/google-gson/)
+- Gson (https://code.google.com/p/google-gson/) (*No longer needed in version 0.2.0!*)
 
 Installation
 ------------
