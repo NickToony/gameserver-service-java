@@ -1,9 +1,12 @@
 package com.nicktoony.gameserver.service;
 
-import com.google.gson.FieldNamingPolicy;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.nicktoony.gameserver.service.client.responses.ServersList;
+import com.nicktoony.gameserver.service.host.APIResponse.CreateServer;
+import com.nicktoony.gameserver.service.host.APIResponse.UpdateServer;
 import com.squareup.okhttp.OkHttpClient;
+
+import java.io.IOException;
+import java.io.Reader;
 
 /**
  * Created by Nick on 31/01/2015.
@@ -16,7 +19,6 @@ public abstract class GameserverConfig {
     private static GameserverConfig configuration;
 
     private OkHttpClient client;
-    private Gson gson;
 
     /**
      * Set your own custom GameserverConfig option. You should extend this class to implement it.
@@ -78,16 +80,9 @@ public abstract class GameserverConfig {
         return client;
     }
 
-    /**
-     * Provides a GSon instance
-     * @return
-     */
-    public Gson getGson() {
-        if (gson == null) {
-            gson = new GsonBuilder()
-                    .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-                    .create();
-        }
-        return gson;
-    }
+    public abstract ServersList parseJsonForServerList(Reader reader) throws IOException;
+
+    public abstract CreateServer parseJsonForCreateServer(Reader reader) throws IOException;
+
+    public abstract UpdateServer parseJsonForUpdateServer(Reader reader) throws IOException;
 }

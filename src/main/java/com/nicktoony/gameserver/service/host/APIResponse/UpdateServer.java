@@ -26,4 +26,12 @@ public class UpdateServer {
     public Map<String, String[]> getErrors() {
         return errors;
     }
+
+    public void setSuccess(boolean success) {
+        this.success = success;
+    }
+
+    public void setErrors(Map<String, String[]> errors) {
+        this.errors = errors;
+    }
 }

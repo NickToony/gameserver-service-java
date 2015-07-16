@@ -1,6 +1,5 @@
 package com.nicktoony.gameserver.service.client;
 
-import com.google.gson.JsonSyntaxException;
 import com.nicktoony.gameserver.service.GameserverConfig;
 import com.nicktoony.gameserver.service.client.models.Server;
 import com.nicktoony.gameserver.service.client.responses.ServersList;
@@ -70,8 +69,7 @@ public class Client implements Callback {
     @Override
     public void onResponse(Response response) throws IOException {
         try {
-            ServersList serversList = GameserverConfig.getConfig().getGson()
-                    .fromJson(response.body().charStream(), ServersList.class);
+            ServersList serversList = GameserverConfig.getConfig().parseJsonForServerList(response.body().charStream());
             servers.addAll(Arrays.asList(serversList.getData()));
 
             GameserverConfig.getConfig().debugLog(
@@ -88,7 +86,7 @@ public class Client implements Callback {
                         "FetchServers :: Completed"
                 );
             }
-        } catch (JsonSyntaxException exception) {
+        } catch (IOException exception) {
             onFail();
 
             GameserverConfig.getConfig().debugLog(

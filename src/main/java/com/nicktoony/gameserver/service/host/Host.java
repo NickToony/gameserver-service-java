@@ -1,6 +1,5 @@
 package com.nicktoony.gameserver.service.host;
 
-import com.google.gson.JsonSyntaxException;
 import com.nicktoony.gameserver.service.GameserverConfig;
 import com.nicktoony.gameserver.service.host.APIResponse.CreateServer;
 import com.nicktoony.gameserver.service.host.APIResponse.UpdateServer;
@@ -123,8 +122,7 @@ public class Host implements Callback {
                 if (response.isSuccessful()) {
                     try {
                         // Read the JSON response
-                        CreateServer server = GameserverConfig.getConfig().getGson()
-                                .fromJson(response.body().charStream(), CreateServer.class);
+                        CreateServer server = GameserverConfig.getConfig().parseJsonForCreateServer(response.body().charStream());
 
                         if (server.isSuccess()) {
                             active = true;
@@ -149,7 +147,7 @@ public class Host implements Callback {
                                 );
                             }
                         }
-                    } catch (JsonSyntaxException exception) {
+                    } catch (IOException exception) {
                         GameserverConfig.getConfig().debugLog(
                                 "CreateServer :: Invalid JSON format"
                         );
@@ -230,8 +228,7 @@ public class Host implements Callback {
         if (response.isSuccessful()) {
             try {
                 // Read the json response
-                UpdateServer server = GameserverConfig.getConfig().getGson()
-                        .fromJson(response.body().charStream(), UpdateServer.class);
+                UpdateServer server = GameserverConfig.getConfig().parseJsonForUpdateServer(response.body().charStream());
 
                 if (server.isSuccess()) {
                     GameserverConfig.getConfig().debugLog(
@@ -250,7 +247,7 @@ public class Host implements Callback {
                         );
                     }
                 }
-            } catch (JsonSyntaxException exception) {
+            } catch (IOException exception) {
                 active = false;
                 GameserverConfig.getConfig().debugLog(
                         "UpdateServer :: Invalid JSON format"
