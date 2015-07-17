@@ -1,13 +1,12 @@
 package com.nicktoony.gameserver.service.client;
 
+import com.nicktoony.gameserver.service.Callback;
 import com.nicktoony.gameserver.service.GameserverConfig;
 import com.nicktoony.gameserver.service.client.models.Server;
 import com.nicktoony.gameserver.service.client.responses.ServersList;
-import com.squareup.okhttp.Callback;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
 
 import java.io.IOException;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -46,19 +45,15 @@ public class Client implements Callback {
      * @param page
      */
     private void fetch(int page) {
-        Request request = new Request.Builder()
-                .url(GameserverConfig.getConfig().getServerUrl()
+        GameserverConfig.getConfig().performGetRequest(GameserverConfig.getConfig().getServerUrl()
                         + GameserverConfig.URL_GET_SERVERS
                         + GameserverConfig.getConfig().getGameAPIKey()
-                        + "?page=" + page)
-                .get()
-                .build();
-
-        GameserverConfig.getConfig().getClient().newCall(request).enqueue(this);
+                        + "?page=" + page,
+                this);
     }
 
     @Override
-    public void onFailure(Request request, IOException e) {
+    public void onFailure() {
         onFail();
 
         GameserverConfig.getConfig().debugLog(
@@ -67,9 +62,9 @@ public class Client implements Callback {
     }
 
     @Override
-    public void onResponse(Response response) throws IOException {
+    public void onSuccess(boolean success, int responseCode, String body) {
         try {
-            ServersList serversList = GameserverConfig.getConfig().parseJsonForServerList(response.body().charStream());
+            ServersList serversList = GameserverConfig.getConfig().parseJsonForServerList(new StringReader(body));
             servers.addAll(Arrays.asList(serversList.getData()));
 
             GameserverConfig.getConfig().debugLog(

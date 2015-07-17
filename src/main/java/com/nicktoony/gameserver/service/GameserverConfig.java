@@ -3,10 +3,10 @@ package com.nicktoony.gameserver.service;
 import com.nicktoony.gameserver.service.client.responses.ServersList;
 import com.nicktoony.gameserver.service.host.APIResponse.CreateServer;
 import com.nicktoony.gameserver.service.host.APIResponse.UpdateServer;
-import com.squareup.okhttp.OkHttpClient;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.util.Map;
 
 /**
  * Created by Nick on 31/01/2015.
@@ -17,8 +17,6 @@ public abstract class GameserverConfig {
     public static final String URL_GET_SERVERS = "game/";
 
     private static GameserverConfig configuration;
-
-    private OkHttpClient client;
 
     /**
      * Set your own custom GameserverConfig option. You should extend this class to implement it.
@@ -70,17 +68,6 @@ public abstract class GameserverConfig {
     public abstract long getChangedUpdateRate();
 
     /**
-     * Provides a HTTP client instance
-     * @return
-     */
-    public OkHttpClient getClient() {
-        if (client == null ) {
-            client = new OkHttpClient();
-        }
-        return client;
-    }
-
-    /**
      * Given the body of a response, create a ServerList model
      * @param reader
      * @return the completed model
@@ -103,4 +90,9 @@ public abstract class GameserverConfig {
      * @throws IOException
      */
     public abstract UpdateServer parseJsonForUpdateServer(Reader reader) throws IOException;
+
+
+    public abstract void performGetRequest(String url, Callback callback);
+
+    public abstract void performPostRequest(String url, Map<String, String> data, Callback callback);
 }

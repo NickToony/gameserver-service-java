@@ -8,9 +8,9 @@ import com.nicktoony.gameserver.service.client.models.Server;
 public class ServersList {
     private Server[] data;
     private int total;
-    private int perPage;
-    private int currentPage;
-    private int lastPage;
+    private int per_page;
+    private int current_page;
+    private int last_page;
     private int from;
     private int to;
 
@@ -23,15 +23,15 @@ public class ServersList {
     }
 
     public int getPerPage() {
-        return perPage;
+        return per_page;
     }
 
     public int getCurrentPage() {
-        return currentPage;
+        return current_page;
     }
 
     public int getLastPage() {
-        return lastPage;
+        return last_page;
     }
 
     public int getFrom() {
@@ -51,15 +51,15 @@ public class ServersList {
     }
 
     public void setPerPage(int perPage) {
-        this.perPage = perPage;
+        this.per_page = perPage;
     }
 
     public void setCurrentPage(int currentPage) {
-        this.currentPage = currentPage;
+        this.current_page = currentPage;
     }
 
     public void setLastPage(int lastPage) {
-        this.lastPage = lastPage;
+        this.last_page = lastPage;
     }
 
     public void setFrom(int from) {

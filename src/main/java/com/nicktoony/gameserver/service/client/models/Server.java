@@ -1,5 +1,6 @@
 package com.nicktoony.gameserver.service.client.models;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -8,9 +9,9 @@ import java.util.Map;
 public class Server {
     private int id;
     private String name;
-    private int currentPlayers;
-    private int maxPlayers;
-    private Map<String, String> meta;
+    private int current_players;
+    private int max_players;
+    private HashMap<String, String> meta;
 
     public int getId() {
         return id;
@@ -21,11 +22,11 @@ public class Server {
     }
 
     public int getCurrentPlayers() {
-        return currentPlayers;
+        return current_players;
     }
 
     public int getMaxPlayers() {
-        return maxPlayers;
+        return max_players;
     }
 
     public Map<String, String> getMeta() {

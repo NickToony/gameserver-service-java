@@ -1,13 +1,12 @@
 package com.nicktoony.gameserver.service.host;
 
+import com.nicktoony.gameserver.service.Callback;
 import com.nicktoony.gameserver.service.GameserverConfig;
 import com.nicktoony.gameserver.service.host.APIResponse.CreateServer;
 import com.nicktoony.gameserver.service.host.APIResponse.UpdateServer;
-import com.squareup.okhttp.Callback;
-import com.squareup.okhttp.FormEncodingBuilder;
-import com.squareup.okhttp.Request;
 
 import java.io.IOException;
+import java.io.StringReader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
@@ -68,21 +67,20 @@ public class Host implements Callback {
         }
 
         // Create the form, attaching meta
-        FormEncodingBuilder formBuilder = new FormEncodingBuilder()
-                .add("name", name)
-                .add("current_players", Integer.toString(currentPlayers))
-                .add("max_players", Integer.toString(maxPlayers))
-                .add("password", password);
-        attachMeta(formBuilder);
+        Map<String, String> parameters = new HashMap<String, String>();
+        parameters.put("name", name);
+        parameters.put("current_players", Integer.toString(currentPlayers));
+        parameters.put("max_players", Integer.toString(maxPlayers));
+        parameters.put("password", password);
+        attachMeta(parameters);
         // Create request
-        Request request = new Request.Builder()
-                .url(GameserverConfig.getConfig().getServerUrl()
-                        + GameserverConfig.URL_UPDATE_SERVER
-                        + GameserverConfig.getConfig().getGameAPIKey()
-                        + "/" + id)
-                .post(formBuilder.build())
-                .build();
-        GameserverConfig.getConfig().getClient().newCall(request).enqueue(this);
+
+        GameserverConfig.getConfig().performPostRequest(GameserverConfig.getConfig().getServerUrl()
+                + GameserverConfig.URL_UPDATE_SERVER
+                + GameserverConfig.getConfig().getGameAPIKey()
+                + "/" + id,
+                parameters,
+                this);
 
         // reschedule the timer
         //timer.schedule(timerTask, GameserverConfig.getConfig().getUpdateRate());
@@ -94,35 +92,20 @@ public class Host implements Callback {
      */
     public void create() {
 
-        // Create the form, attaching meta
-        FormEncodingBuilder formBuilder = new FormEncodingBuilder()
-                .add("name", name)
-                .add("current_players", Integer.toString(currentPlayers))
-                .add("max_players", Integer.toString(maxPlayers));
-        attachMeta(formBuilder);
-
-        // Create the request
-        Request request = new Request.Builder()
-                .url(GameserverConfig.getConfig().getServerUrl()
-                        + GameserverConfig.URL_CREATE_SERVER
-                        + GameserverConfig.getConfig().getGameAPIKey())
-                .post(formBuilder.build())
-                .build();
-
         Callback callback = new Callback() {
             @Override
-            public void onFailure(Request request, IOException e) {
+            public void onFailure() {
                 GameserverConfig.getConfig().debugLog(
                         "CreateServer :: Failed to connect"
                 );
             }
 
             @Override
-            public void onResponse(com.squareup.okhttp.Response response) throws IOException {
-                if (response.isSuccessful()) {
+            public void onSuccess(boolean success, int responseCode, String body) {
+                if (success) {
                     try {
                         // Read the JSON response
-                        CreateServer server = GameserverConfig.getConfig().parseJsonForCreateServer(response.body().charStream());
+                        CreateServer server = GameserverConfig.getConfig().parseJsonForCreateServer(new StringReader(body));
 
                         if (server.isSuccess()) {
                             active = true;
@@ -155,14 +138,26 @@ public class Host implements Callback {
 
                 } else {
                     GameserverConfig.getConfig().debugLog(
-                            "CreateServer :: HTTP header failure: " + response.code()
+                            "CreateServer :: HTTP header failure: " + responseCode
                     );
                 }
             }
         };
 
+
+        // Create the form, attaching meta
+        Map<String, String> parameters = new HashMap<String, String>();
+        parameters.put("name", name);
+        parameters.put("current_players", Integer.toString(currentPlayers));
+        parameters.put("max_players", Integer.toString(maxPlayers));
+        attachMeta(parameters);
+
         // Finally, make the call (ASYNC)
-        GameserverConfig.getConfig().getClient().newCall(request).enqueue(callback);
+        GameserverConfig.getConfig().performPostRequest(GameserverConfig.getConfig().getServerUrl()
+                + GameserverConfig.URL_CREATE_SERVER
+                + GameserverConfig.getConfig().getGameAPIKey(),
+                parameters,
+                callback);
 
     }
 
@@ -216,7 +211,7 @@ public class Host implements Callback {
     }
 
     @Override
-    public void onFailure(Request request, IOException e) {
+    public void onFailure() {
         active = false;
         GameserverConfig.getConfig().debugLog(
                 "CreateServer :: Failed to connect"
@@ -224,11 +219,11 @@ public class Host implements Callback {
     }
 
     @Override
-    public void onResponse(com.squareup.okhttp.Response response) throws IOException {
-        if (response.isSuccessful()) {
+    public void onSuccess(boolean success, int responseCode, String body) {
+        if (success) {
             try {
                 // Read the json response
-                UpdateServer server = GameserverConfig.getConfig().parseJsonForUpdateServer(response.body().charStream());
+                UpdateServer server = GameserverConfig.getConfig().parseJsonForUpdateServer(new StringReader(body));
 
                 if (server.isSuccess()) {
                     GameserverConfig.getConfig().debugLog(
@@ -257,7 +252,7 @@ public class Host implements Callback {
         } else {
             active = false;
             GameserverConfig.getConfig().debugLog(
-                    "UpdateServer :: HTTP header failure: " + response.code()
+                    "UpdateServer :: HTTP header failure: " + responseCode
             );
         }
     }
@@ -266,9 +261,7 @@ public class Host implements Callback {
         meta.put(key, value);
     }
 
-    private void attachMeta(FormEncodingBuilder builder) {
-        for (Map.Entry<String, String> data : meta.entrySet()) {
-            builder.add(data.getKey(), data.getValue());
-        }
+    private void attachMeta(Map<String, String> map) {
+        map.putAll(meta);
     }
 }
