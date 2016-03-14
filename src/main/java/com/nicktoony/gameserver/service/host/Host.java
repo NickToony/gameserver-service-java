@@ -9,8 +9,6 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * Created by Nick on 31/01/2015.
@@ -18,6 +16,7 @@ import java.util.TimerTask;
  * This class is for use by servers wishing to keep their details up to date
  */
 public class Host implements Callback {
+
     private String name;
     private int currentPlayers;
     private int maxPlayers;
@@ -26,8 +25,6 @@ public class Host implements Callback {
     private boolean active = false;
     private String password;
     private String id;
-    private Timer timer;
-    private TimerTask timerTask;
 
     private Map<String, String> meta;
 
@@ -44,14 +41,6 @@ public class Host implements Callback {
 
         meta = new HashMap<>();
 
-        timer = new Timer();
-        timerTask = new TimerTask() {
-            @Override
-            public void run() {
-                step();
-            }
-        };
-
         // send to gameserver list
         //create();
     }
@@ -62,7 +51,7 @@ public class Host implements Callback {
     private void step() {
         // immediately stop if the server is no longer active
         if (!active) {
-            timer.cancel();
+            GameserverConfig.getConfig().endHostLoop(this);
             return;
         }
 
@@ -111,9 +100,10 @@ public class Host implements Callback {
                             active = true;
                             password = server.getPassword(); // we need this for updating
                             id = server.getId(); // we need this for updating
-                            timer.scheduleAtFixedRate(timerTask, // start the timer task
-                                    GameserverConfig.getConfig().getUpdateRate(),
-                                    GameserverConfig.getConfig().getUpdateRate());
+//                            timer.scheduleAtFixedRate(timerTask, // start the timer task
+//                                    GameserverConfig.getConfig().getUpdateRate(),
+//                                    GameserverConfig.getConfig().getUpdateRate());
+                            GameserverConfig.getConfig().startHostLoop(Host.this, GameserverConfig.getConfig().getUpdateRate());
 
                             GameserverConfig.getConfig().debugLog(
                                     "CreateServer :: Success"

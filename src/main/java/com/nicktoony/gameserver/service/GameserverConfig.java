@@ -3,6 +3,7 @@ package com.nicktoony.gameserver.service;
 import com.nicktoony.gameserver.service.client.responses.ServersList;
 import com.nicktoony.gameserver.service.host.APIResponse.CreateServer;
 import com.nicktoony.gameserver.service.host.APIResponse.UpdateServer;
+import com.nicktoony.gameserver.service.host.Host;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -95,4 +96,7 @@ public abstract class GameserverConfig {
     public abstract void performGetRequest(String url, Callback callback);
 
     public abstract void performPostRequest(String url, Map<String, String> data, Callback callback);
+
+    public abstract void startHostLoop(Host host, long rate);
+    public abstract void endHostLoop(Host host);
 }
