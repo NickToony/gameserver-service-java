@@ -52,10 +52,6 @@ public class Host implements Callback {
     public void step() {
         // immediately stop if the server is no longer active
         if (!active) {
-<<<<<<< HEAD
-            GameserverConfig.getConfig().endHostLoop(this);
-=======
->>>>>>> Removed timer usage. You should call step yourself in your server loop.
             return;
         }
 
@@ -107,14 +103,7 @@ public class Host implements Callback {
                             active = true;
                             password = server.getPassword(); // we need this for updating
                             id = server.getId(); // we need this for updating
-<<<<<<< HEAD
-//                            timer.scheduleAtFixedRate(timerTask, // start the timer task
-//                                    GameserverConfig.getConfig().getUpdateRate(),
-//                                    GameserverConfig.getConfig().getUpdateRate());
-                            GameserverConfig.getConfig().startHostLoop(Host.this, GameserverConfig.getConfig().getUpdateRate());
-=======
                             lastUpdate = System.currentTimeMillis();
->>>>>>> Removed timer usage. You should call step yourself in your server loop.
 
                             GameserverConfig.getConfig().debugLog(
                                     "CreateServer :: Success"
