@@ -1,7 +1,5 @@
 package com.nicktoony.gameserver.service;
 
-import java.io.IOException;
-
 /**
  * Created by nick on 16/07/15.
  */

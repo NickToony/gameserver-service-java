@@ -23,6 +23,7 @@ public class Host implements Callback {
 
     private boolean changed = false;
     private boolean active = false;
+    private long lastUpdate = 0;
     private String password;
     private String id;
 
@@ -48,12 +49,21 @@ public class Host implements Callback {
     /**
      * The inner loop of the timer task. It will stop itself when the server is no longer active.
      */
-    private void step() {
+    public void step() {
         // immediately stop if the server is no longer active
         if (!active) {
+<<<<<<< HEAD
             GameserverConfig.getConfig().endHostLoop(this);
+=======
+>>>>>>> Removed timer usage. You should call step yourself in your server loop.
             return;
         }
+
+        // Only push updates when we should
+        if (lastUpdate + GameserverConfig.getConfig().getUpdateRate() > System.currentTimeMillis()) {
+            return;
+        }
+        lastUpdate = System.currentTimeMillis();
 
         // Create the form, attaching meta
         Map<String, String> parameters = new HashMap<String, String>();
@@ -70,9 +80,6 @@ public class Host implements Callback {
                 + "/" + id,
                 parameters,
                 this);
-
-        // reschedule the timer
-        //timer.schedule(timerTask, GameserverConfig.getConfig().getUpdateRate());
     }
 
     /**
@@ -100,10 +107,14 @@ public class Host implements Callback {
                             active = true;
                             password = server.getPassword(); // we need this for updating
                             id = server.getId(); // we need this for updating
+<<<<<<< HEAD
 //                            timer.scheduleAtFixedRate(timerTask, // start the timer task
 //                                    GameserverConfig.getConfig().getUpdateRate(),
 //                                    GameserverConfig.getConfig().getUpdateRate());
                             GameserverConfig.getConfig().startHostLoop(Host.this, GameserverConfig.getConfig().getUpdateRate());
+=======
+                            lastUpdate = System.currentTimeMillis();
+>>>>>>> Removed timer usage. You should call step yourself in your server loop.
 
                             GameserverConfig.getConfig().debugLog(
                                     "CreateServer :: Success"
